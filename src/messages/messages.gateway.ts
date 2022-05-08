@@ -6,6 +6,7 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
     cors: {
+        // put the correct origins when finishing the project
         origin: '*'
     }, 
 })
@@ -15,6 +16,11 @@ export class MessagesGateway {
     server: Server; 
 
     constructor(private readonly messagesService: MessagesService) {}
+
+    handleDisconnect(client: Socket){
+        console.log('disconnected, ', client.id); 
+        this.messagesService.disconnect(client.id);
+    }
 
     @SubscribeMessage('createMessage')
     async create(
@@ -36,10 +42,17 @@ export class MessagesGateway {
     @SubscribeMessage('join')
     joinRoom(
         @MessageBody('username') username: string, 
+        @MessageBody('password') password: string, 
         @ConnectedSocket() client: Socket
     ){
-        console.log(`${username} ${client.id} joined the room`); 
-        return this.messagesService.identify(username, client.id); 
+        console.log(`${username} ${client.id} ${password} joined the room`); 
+        return this.messagesService.identify(username, password, client.id); 
+    }
+
+    @SubscribeMessage('usersList')
+    usersList(){
+        console.log('usersList requested')
+        return this.messagesService.usersList(); 
     }
 
     /* 

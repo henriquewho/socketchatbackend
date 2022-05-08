@@ -11,8 +11,10 @@ export class MessagesService {
     // keep track of clients names / ids 
     clientToUser = {};  
 
-    identify(username: string, clientId: string){
+    identify(username: string, password: string, clientId: string){
+        // hash the password value and check it in the db
         this.clientToUser[clientId] = username; 
+        console.log('clientToUser', this.clientToUser);
         return Object.values(this.clientToUser); 
     }
 
@@ -34,6 +36,14 @@ export class MessagesService {
         // to do: put query to retrieve messages from db
     }
 
+    usersList() {
+        return this.clientToUser; 
+    }
+
+    disconnect(clientId: string) {
+        console.log('disconnected, ', clientId); 
+        delete this.clientToUser[clientId]; 
+    }
   /* 
 
   findOne(id: number) {
