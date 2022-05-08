@@ -33,7 +33,7 @@ export class MessagesService {
 
     findAll() {
         return this.messages;
-        // to do: put query to retrieve messages from db
+        // to do: put query to retrieve messages from db, from user1 to user2 / user2 to user1
     }
 
     usersList() {
